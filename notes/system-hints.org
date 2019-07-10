@@ -1,0 +1,12 @@
+#+BEGIN_SRC
+sudo apt install tlp
+sudo tlp start
+sudo tlp-stat
+sudo tlp-stat -s
+systemctl enable tlp
+#+END_SRC
+
+https://github.com/smxi/inxi
+https://github.com/lm-sensors/lm-sensors
+
+https://linrunner.de/en/tlp/tlp.html
