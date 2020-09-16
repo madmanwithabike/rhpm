@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eu
+set -o pipefail
+
+mkdir -p ~/.config
+mkdir -p ~/.local/var/log

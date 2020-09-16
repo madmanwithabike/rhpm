@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -eu
+set -o pipefail
+
+sudo apt update
+sudo apt install clang-9 clang-9-doc clang-9-examples clang-format-9 \
+                 clang-tidy-9 clang-tools-9 \
+                 libclang-9-dev \
+                 liblldb-9 liblldb-9-dev \
+                 python-clang-9 python-lldb-9 \
+                 libomp-9-dev libomp-9-doc \
+                 llvm-9-runtime llvm-9 llvm-9-dev llvm-9-doc \
+                 llvm-9-examples llvm-9-tools \
+                 libssl-dev lua5.3 liblua5.3-0

@@ -1,0 +1,65 @@
+#!/bin/bash
+
+set -eu
+set -o pipefail
+
+SPATH="$(dirname "${BASH_SOURCE[0]}")"
+if [[ ! -d "${SPATH}" ]]; then SPATH="${PWD}"; fi
+readonly SPATH="$(cd -P "${SPATH}" && pwd)"
+
+readonly PRJ_PATH="${SPATH}"
+source "${PRJ_PATH}/conf"
+
+if (( $(id -u) != 0 )); then
+  echo "Please, run as root"
+  exit 1
+fi
+
+cd /usr/local/stow && echo cd ${PWD}
+
+chown -vR rh:rh \
+      "${STOW_NAME}/var/lib/arangodb3-apps"
+
+chmod -vR g+rw \
+      "${STOW_NAME}/var/lib/arangodb3-apps"
+
+chown -vR rh:rh \
+      "${STOW_NAME}/var/lib/arangodb3"
+
+chmod -vR g+rw \
+      "${STOW_NAME}/var/lib/arangodb3"
+
+touch "${STOW_NAME}/var/log/arangodb3/arangod.log"
+
+chown -vR rh:rh \
+      "${STOW_NAME}/var/log/arangodb3"
+
+chmod -vR g+rw \
+      "${STOW_NAME}/var/log/arangodb3"
+
+sed -i -E 's/^(\s*uid\s*=\s*.*)/# \1/' \
+    /usr/local/etc/arangodb3/arangod.conf
+
+sed -i -E 's/^(\s*gid\s*=\s*.*)/# \1/' \
+    /usr/local/etc/arangodb3/arangod.conf
+
+if ! grep -qE '^\s*arangodb\s+(:?soft|hard)\s+nofile' /etc/security/limits.conf
+then
+
+  sed -i -E 'N;/# End of file$/i \
+arangodb         soft    nofile          8192\
+arangodb         hard    nofile          16384'\
+      /etc/security/limits.conf
+
+#  perl -0777 -i -pe 's/(\n*# End of file)/\
+#arangodb         soft    nofile          8192\
+#arangodb         hard    nofile          16384\1/' \
+#       /etc/security/limits.conf
+
+fi
+
+sed -i -E 's/^#?(DefaultLimitNOFILE)=.*/\1=16384/' \
+    /etc/systemd/system.conf
+
+# sysctl -w "vm.max_map_count=1024000"
+echo "vm.max_map_count = 1024000" > /etc/sysctl.d/40-arangodb.conf

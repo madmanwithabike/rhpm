@@ -5,7 +5,7 @@ set -eu
 set -o pipefail
 
 sudo apt update
-sudo apt install stow build-essential autoconf-archive autoconf texinfo \
+sudo apt install stow xstow build-essential autoconf-archive autoconf texinfo \
          gnu-standards autoconf-doc libtool texlive-generic-recommended \
          texinfo-doc-nonfree libtool-doc wget dh-make gawk devhelp \
          spamassassin gnutls-bin autoconf texlive silversearcher-ag \
